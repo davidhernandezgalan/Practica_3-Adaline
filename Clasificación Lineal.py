@@ -113,3 +113,27 @@ class AdalineGUI(tk.Tk):
         mse = total_error / len(self.points)
         print(f"Época {self.epoch + 1}, Error cuadrático medio: {mse:.4f}")
         self.epoch += 1
+
+         # Función para dibujar el contorno degradado de clasificación
+    def draw_decision_boundary(self):
+        # Crear una cuadrícula de puntos
+        x_min, x_max = -10, 10
+        y_min, y_max = -10, 10
+        xx, yy = np.meshgrid(np.linspace(x_min, x_max, 200), np.linspace(y_min, y_max, 200))
+
+        # Calcular la salida para cada punto en la cuadrícula
+        Z = self.weights[0] * xx + self.weights[1] * yy + self.weights[2]
+        Z = np.tanh(Z)  # Usar tangente hiperbólica para suavizar
+
+        # Dibujar el contorno degradado
+        self.ax.contourf(xx, yy, Z, levels=1, cmap='coolwarm_r', alpha=0.3)
+
+    # Cerrar figura y ventana
+    def on_closing(self):
+        plt.close(self.figure)
+        self.destroy()
+
+# Ejecutar aplicación
+if __name__ == "__main__":
+    app = AdalineGUI()
+    app.mainloop()
