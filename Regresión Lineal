@@ -54,11 +54,31 @@ class RegressionApp:
         self.activate_button = tk.Button(root, text="Activar ADALINE", command=self.activate_adaline)
         self.activate_button.pack()
         
-def add_point(self, event):
-        if event.inaxes != self.ax:
+    def add_point(self, event):
+            if event.inaxes != self.ax:
+                return
+            
+            x, y = event.xdata, event.ydata
+            self.points.append((x, y))
+            self.ax.plot(x, y, 'bo')  # Punto azul
+            self.canvas.draw()
+
+    def activate_adaline(self):
+        if len(self.points) < 2:
+            print("Se necesitan al menos dos puntos para realizar la regresión lineal.")
             return
-        
-        x, y = event.xdata, event.ydata
-        self.points.append((x, y))
-        self.ax.plot(x, y, 'bo')  # Punto azul
+
+        X = np.array([[p[0]] for p in self.points])
+        y = np.array([p[1] for p in self.points])
+
+        adaline = Adaline(learning_rate=0.001, epochs=10000)
+        adaline.fit(X, y)
+
+        # Generar predicciones para un rango amplio de X
+        X_plot = np.linspace(-10, 10, 100).reshape(-1, 1)
+        y_pred = adaline.predict(X_plot)
+
+        # Dibujar la línea de regresión
+        self.ax.plot(X_plot, y_pred, 'r-', label='Línea de regresión')
+        self.ax.legend()
         self.canvas.draw()
