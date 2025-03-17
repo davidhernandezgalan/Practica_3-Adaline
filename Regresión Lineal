@@ -54,3 +54,11 @@ class RegressionApp:
         self.activate_button = tk.Button(root, text="Activar ADALINE", command=self.activate_adaline)
         self.activate_button.pack()
         
+def add_point(self, event):
+        if event.inaxes != self.ax:
+            return
+        
+        x, y = event.xdata, event.ydata
+        self.points.append((x, y))
+        self.ax.plot(x, y, 'bo')  # Punto azul
+        self.canvas.draw()
