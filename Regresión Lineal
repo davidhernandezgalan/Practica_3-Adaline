@@ -25,3 +25,32 @@ class Adaline:
 
     def predict(self, X):
         return self.net_input(X)
+    
+class RegressionApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Regresión Lineal con ADALINE")
+        self.points = []
+        
+        # Crear la figura y el eje de matplotlib
+        self.fig = Figure(figsize=(5, 5), dpi=100)
+        self.ax = self.fig.add_subplot(111)
+        self.ax.set_xlim(-10, 10)  # Limites de -10 a 10 para mostrar los 4 cuadrantes completos
+        self.ax.set_ylim(-10, 10)
+        self.ax.set_title("Plano Cartesiano")
+        self.ax.set_xlabel("X")
+        self.ax.set_ylabel("Y")
+        
+        # Agregar líneas para los ejes X e Y
+        self.ax.axhline(0, color='black', linewidth=0.5)  # Eje X
+        self.ax.axvline(0, color='black', linewidth=0.5)  # Eje Y
+
+        # Incrustar la figura en Tkinter
+        self.canvas = FigureCanvasTkAgg(self.fig, master=root)
+        self.canvas.get_tk_widget().pack()
+        self.canvas.mpl_connect("button_press_event", self.add_point)
+        
+        # Botón de activación
+        self.activate_button = tk.Button(root, text="Activar ADALINE", command=self.activate_adaline)
+        self.activate_button.pack()
+        
