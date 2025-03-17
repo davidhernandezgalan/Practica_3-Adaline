@@ -70,3 +70,46 @@ class AdalineGUI(tk.Tk):
                 self.ax.plot(x, y, 'bo', markersize=12)  # Punto azul
 
             self.canvas.draw()
+
+# Algoritmo adaline para avanzar en la época
+    def advance_epoch(self):
+        if not self.points:
+            messagebox.showwarning("ERROR", "Ingresa puntos en el plano.")
+            return
+
+        total_error = 0
+
+        # Recorrer cada punto y aplicar el algoritmo adaline
+        for x, y, label in self.points:
+            input_vector = np.array([x, y, 1])  # Añadir bias como entrada constante (1)
+            prediction = np.dot(self.weights, input_vector)  # Salida lineal del ADALINE
+            error = label - prediction  # Calcular el error
+            self.weights += self.learning_rate * error * input_vector  # Ajustar pesos
+
+            # Sumar el error cuadrático
+            total_error += error ** 2
+
+        # Dibujar el plano con el contorno degradado
+        self.draw_decision_boundary()
+
+        # Dibujar puntos nuevamente
+        for x, y, label in self.points:
+            color = 'bo' if label == 1 else 'ro'
+            self.ax.plot(x, y, color, markersize=12)
+
+        # Dibujar el hiperplano actualizado
+        x_vals = np.array(self.ax.get_xlim())
+        y_vals = - (self.weights[0] / self.weights[1]) * x_vals - (self.weights[2] / self.weights[1])
+        self.ax.plot(x_vals, y_vals, 'm--')  # Línea verde discontinua
+
+        self.canvas.draw()
+
+        # Actualizar etiquetas con los nuevos valores de pesos y bias (con dos decimales)
+        self.w1_label.config(text=f"Peso w1: {self.weights[0]:.2f}")
+        self.w2_label.config(text=f"Peso w2: {self.weights[1]:.2f}")
+        self.bias_label.config(text=f"Bias w0: {self.weights[2]:.2f}")
+
+        # Mostrar el error cuadrático medio para observar la convergencia
+        mse = total_error / len(self.points)
+        print(f"Época {self.epoch + 1}, Error cuadrático medio: {mse:.4f}")
+        self.epoch += 1
