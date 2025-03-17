@@ -82,3 +82,8 @@ class RegressionApp:
         self.ax.plot(X_plot, y_pred, 'r-', label='Línea de regresión')
         self.ax.legend()
         self.canvas.draw()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = RegressionApp(root)
+    root.mainloop()
