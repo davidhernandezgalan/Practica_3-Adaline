@@ -55,3 +55,18 @@ class AdalineGUI(tk.Tk):
 
         # Manejo de cierre
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+         # Marcar puntos en el hiperplano
+    def add_point(self, event):
+        if event.inaxes:
+            x, y = round(event.xdata), round(event.ydata)
+
+            # Clic izquierdo para clase -1 (rojo), clic derecho para clase 1 (azul)
+            if event.button == 1:  # Clic izquierdo
+                self.points.append((x, y, -1))  # Clase -1 para rojo
+                self.ax.plot(x, y, 'ro', markersize=12)  # Punto rojo
+            elif event.button == 3:  # Clic derecho
+                self.points.append((x, y, 1))  # Clase 1 para azul
+                self.ax.plot(x, y, 'bo', markersize=12)  # Punto azul
+
+            self.canvas.draw()
